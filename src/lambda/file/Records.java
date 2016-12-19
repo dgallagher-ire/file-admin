@@ -5,24 +5,24 @@ import java.util.List;
 
 public class Records {
 
-	private List<Record> data;
+	private List<Record> records;
 	
 	public Records(){
 	}
 	
-	public final void addRecord(final Record record){
-		if(this.data == null){
-			this.data = new ArrayList<>();
+	public final void addRecords(final Record record){
+		if(this.records == null){
+			this.records = new ArrayList<>();
 		}
-		this.data.add(record);
+		this.records.add(record);
 	}
 
-	public final List<Record> getData() {
-		return data;
+	public final List<Record> getRecords() {
+		return records;
 	}
 
-	public final void setData(List<Record> data) {
-		this.data = data;
+	public final void setRecords(List<Record> data) {
+		this.records = data;
 	}
 	
 }
