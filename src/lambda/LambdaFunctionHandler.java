@@ -24,18 +24,47 @@ import lambda.file.Records;
 
 public class LambdaFunctionHandler implements RequestHandler<RequestClass, ResponseClass> {
 
-    @Override
-    public ResponseClass handleRequest(RequestClass input, Context context) {
-        context.getLogger().log("Input: " + input);
+	@Override
+	public ResponseClass handleRequest(RequestClass input, Context context) {
+		final LambdaLogger logger = context.getLogger();
+		try {
+			final ObjectMapper mapper = new ObjectMapper();
+			logger.log(mapper.writeValueAsString(input));
+			final AmazonS3 s3Client = new AmazonS3Client(); 
+			final Records records = getRecords(s3Client);
+			if("ADD".equals(input.getAction())){
+				logger.log("Add record");
+				records.addRecords(buildNewRecord(input));
+			}
+			logger.log(mapper.writeValueAsString(records));
+			addFile(logger, s3Client, "dgallagher-bucket", "loader-data.json", mapper.writeValueAsString(records));
+			return new ResponseClass("success");
+		} catch (Exception e) {
+			logger.log(e.toString());
+			return new ResponseClass("failed");
+		}
+	}
+	
+	private static Record buildNewRecord(final RequestClass input) {
+		return null;
+	}
 
-        // TODO: implement your handler
-        return null;
-    }
-    
-    public static Records getRecords(final AmazonS3 s3Client) throws Exception {
+	private static void addFile(final LambdaLogger logger, final AmazonS3 s3Client, final String bucketName, final String key,
+			final String contents) throws Exception {
+
+		try {
+			s3Client.putObject(bucketName, key, contents);
+			logger.log("File written to: " + key);
+		} catch (Exception e) {
+			logger.log(e.toString());
+			throw e;
+		}
+	}
+
+	private static Records getRecords(final AmazonS3 s3Client) throws Exception {
 		final StringBuilder sb = new StringBuilder();
 		final String loaderJson = getFileContents(s3Client, "dgallagher-bucket", "loader-data.json");
-		if(loaderJson == null || loaderJson.equals("")){
+		if (loaderJson == null || loaderJson.equals("")) {
 			return new Records();
 		}
 		final ObjectMapper mapper = new ObjectMapper();
@@ -72,6 +101,5 @@ public class LambdaFunctionHandler implements RequestHandler<RequestClass, Respo
 			}
 		}
 	}
-
 
 }

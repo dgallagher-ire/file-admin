@@ -5,7 +5,10 @@ public class ResponseClass {
 	private String response;
 	
 	public ResponseClass(){
-		
+	}
+	
+	public ResponseClass(final String response){
+		this.response = response;
 	}
 
 	public final String getResponse() {
