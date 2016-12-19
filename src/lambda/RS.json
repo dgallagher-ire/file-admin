@@ -1,0 +1,12 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "title": "PostDemoRS",
+    "description": "Post Demo RS Model",
+    "type": "object",
+    "properties": {
+    	"response": {
+            "description": "The unique identifier for a product",
+            "type": "string"
+        }
+    }
+}

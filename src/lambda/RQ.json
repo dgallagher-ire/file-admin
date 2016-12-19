@@ -1,0 +1,32 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "title": "PostDemo",
+    "description": "Post Demo Model",
+    "type": "object",
+    "properties": {
+    	"action": {
+            "description": "The unique identifier for a product",
+            "type": "string"
+        },
+		"bucket": {
+            "description": "The unique identifier for a product",
+            "type": "string"
+        },
+		"live": {
+            "description": "The unique identifier for a product",
+            "type": "boolean"
+        },
+		"files": {
+            "description": "The unique identifier for a product",
+            "type": "integer"
+        },
+		"batch": {
+            "description": "The unique identifier for a product",
+            "type": "integer"
+        },
+		"redShift": {
+            "description": "The unique identifier for a product",
+            "type": "string"
+        }
+    }
+}
