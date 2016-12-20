@@ -36,6 +36,9 @@ public class LambdaFunctionHandler implements RequestHandler<RequestClass, Respo
 				logger.log("Add record");
 				records.addRecords(buildNewRecord(input));
 			}
+			else if("UPDATE".equals(input.getAction())){
+				updateRecord(records, input);
+			}
 			logger.log(mapper.writeValueAsString(records));
 			addFile(logger, s3Client, "dgallagher-bucket", "loader-data.json", mapper.writeValueAsString(records));
 			return new ResponseClass("success");
@@ -45,6 +48,18 @@ public class LambdaFunctionHandler implements RequestHandler<RequestClass, Respo
 		}
 	}
 	
+	private static void updateRecord(final Records records,final RequestClass input){
+		final Records newRecs = new Records();
+		for(final Record r : records.getRecords()){
+			if(r.getBucket().equals(input.getBucket())){
+				r.setLive(input.getLive());
+				r.setFiles(input.getFiles());
+				r.setBatch(input.getBatch());
+				r.setRedShift(input.getRedShift());
+			}
+		}
+		
+	}
 	private static Record buildNewRecord(final RequestClass input) {
 		final Record newRecord = new Record();
 		newRecord.setBucket(input.getBucket());
