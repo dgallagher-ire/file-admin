@@ -32,12 +32,17 @@ public class LambdaFunctionHandler implements RequestHandler<RequestClass, Respo
 			logger.log(mapper.writeValueAsString(input));
 			final AmazonS3 s3Client = new AmazonS3Client(); 
 			final Records records = getRecords(s3Client);
-			if("ADD".equals(input.getAction())){
+			if("ADD".equals(input.getAction())) {
 				logger.log("Add record");
 				records.addRecords(buildNewRecord(input));
 			}
-			else if("UPDATE".equals(input.getAction())){
+			else if("UPDATE".equals(input.getAction())) {
+				logger.log("Update records");
 				updateRecord(records, input);
+			}
+			else if("DELETE".equals(input.getAction())) {
+				logger.log("Delete records");
+				deleteRecords(records, input);
 			}
 			logger.log(mapper.writeValueAsString(records));
 			addFile(logger, s3Client, "dgallagher-bucket", "loader-data.json", mapper.writeValueAsString(records));
@@ -48,8 +53,15 @@ public class LambdaFunctionHandler implements RequestHandler<RequestClass, Respo
 		}
 	}
 	
+	private static void deleteRecords(final Records records, final RequestClass input) {
+		for (final Record r : records.getRecords()) {
+			if (r.getBucket().equals(input.getBucket())) {
+				continue;
+			}
+		}
+	}
+	
 	private static void updateRecord(final Records records,final RequestClass input){
-		final Records newRecs = new Records();
 		for(final Record r : records.getRecords()){
 			if(r.getBucket().equals(input.getBucket())){
 				r.setLive(input.getLive());
@@ -58,8 +70,8 @@ public class LambdaFunctionHandler implements RequestHandler<RequestClass, Respo
 				r.setRedShift(input.getRedShift());
 			}
 		}
-		
 	}
+	
 	private static Record buildNewRecord(final RequestClass input) {
 		final Record newRecord = new Record();
 		newRecord.setBucket(input.getBucket());
