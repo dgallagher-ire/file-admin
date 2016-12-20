@@ -46,7 +46,13 @@ public class LambdaFunctionHandler implements RequestHandler<RequestClass, Respo
 	}
 	
 	private static Record buildNewRecord(final RequestClass input) {
-		return null;
+		final Record newRecord = new Record();
+		newRecord.setBucket(input.getBucket());
+		newRecord.setLive(input.getLive());
+		newRecord.setFiles(input.getFiles());
+		newRecord.setBatch(input.getBatch());
+		newRecord.setRedShift(input.getRedShift());
+		return newRecord;
 	}
 
 	private static void addFile(final LambdaLogger logger, final AmazonS3 s3Client, final String bucketName, final String key,
