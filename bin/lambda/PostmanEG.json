@@ -1,0 +1,8 @@
+{
+	"action": "DELETE",
+	"bucketName": "red bucket",
+	"live": false,
+	"files": 567,
+	"batch": 33,
+	"redShift": "ds.table"
+}

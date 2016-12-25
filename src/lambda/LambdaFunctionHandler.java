@@ -54,10 +54,13 @@ public class LambdaFunctionHandler implements RequestHandler<RequestClass, Respo
 	}
 	
 	private static void deleteRecords(final Records records, final RequestClass input) {
+		int index = 0;
 		for (final Record r : records.getRecords()) {
 			if (r.getBucket().equals(input.getBucket())) {
-				continue;
+				records.getRecords().remove(index);
+				break;
 			}
+			index++;
 		}
 	}
 	
